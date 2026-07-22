@@ -1,4 +1,4 @@
-// 手机端控制验证：控件移出游戏区、置于下方控制条、左右对调、整体居中、全局禁用长按菜单、可拖动。
+// 手机端控制验证：控件在游戏区下方、左右对调分居两端、摇杆钮居中于大圈、全局禁用长按菜单、可拖动。
 import { chromium } from 'playwright-core';
 
 const URL = process.env.URL || 'http://localhost:5173/';
@@ -41,8 +41,9 @@ try {
     const r = (s) => { const e = document.querySelector(s); if (!e) return null; const b = e.getBoundingClientRect(); return { x: b.x, y: b.y, w: b.width, h: b.height, top: b.top, bottom: b.bottom, left: b.left, right: b.right, cx: b.x + b.width / 2, cy: b.y + b.height / 2 }; };
     const mc = document.querySelector('#mobileControls');
     return {
-      game: r('#game'), mc: r('#mobileControls'), draw: r('#drawBtn'), move: r('#movePad'),
+      game: r('#game'), mc: r('#mobileControls'), draw: r('#drawBtn'), move: r('#movePad'), knob: r('#moveKnob'),
       mcJustify: getComputedStyle(mc).justifyContent,
+      knobPos: getComputedStyle(document.querySelector('#moveKnob')).position,
       bodyUserSelect: getComputedStyle(document.body).userSelect,
       screenCenterX: window.innerWidth / 2,
     };
@@ -52,11 +53,12 @@ try {
   // 断言1：控制条在游戏区下方，不重叠
   R.controlsBelowGame = geo.mc.top >= geo.game.bottom - 1;
   R.overlapPixels = Math.max(0, geo.game.bottom - geo.mc.top);
-  // 断言2：左右对调（划线在右、移动在左）
+  // 断言2：左右对调分居两端（划线在右、移动在左）
   R.drawRightOfMove = geo.draw.cx > geo.move.cx;
-  // 断言3：整体居中（控制条 justify-content:center 且控制条水平居中于屏幕）
-  R.mcJustifyCenter = geo.mcJustify === 'center';
-  R.controlsCentered = Math.abs(geo.mc.cx - geo.screenCenterX) <= 8;
+  R.buttonsSplit = geo.move.cx < geo.screenCenterX - 30 && geo.draw.cx > geo.screenCenterX + 30;
+  // 断言3（核心修复）：摇杆小圆钮默认居中于移动大圈
+  R.knobCenteredInPad = Math.abs(geo.knob.cx - geo.move.cx) <= 6 && Math.abs(geo.knob.cy - geo.move.cy) <= 6;
+  R.knobAbsolute = geo.knobPos === 'absolute';
   // 断言4：全局禁菜单（CSS user-select:none 在触摸设备生效 + document 级 contextmenu 拦截）
   R.globalUserSelectNone = geo.bodyUserSelect === 'none';
   R.globalContextmenuBlocked = await page.evaluate(() => {
@@ -65,7 +67,7 @@ try {
     return e.defaultPrevented;
   });
 
-  // 断言5：拖动移动盘 -> 摇杆位移
+  // 断言5：拖动移动盘 -> 摇杆从中心位移
   const mp = geo.move;
   await page.mouse.move(mp.cx, mp.cy);
   await page.mouse.down();
@@ -76,6 +78,15 @@ try {
     return m ? Math.abs(parseInt(m[1], 10)) : 0;
   });
   await page.mouse.up();
+  // 抬起后回中心
+  await page.waitForTimeout(60);
+  R.knobReturnsCenter = await page.evaluate(() => {
+    const move = document.querySelector('#movePad').getBoundingClientRect();
+    const k = document.querySelector('#moveKnob').getBoundingClientRect();
+    const mcx = move.x + move.width / 2, mcy = move.y + move.height / 2;
+    const kcx = k.x + k.width / 2, kcy = k.y + k.height / 2;
+    return Math.abs(kcx - mcx) <= 6 && Math.abs(kcy - mcy) <= 6;
+  });
 
   // 断言6：按住划线键 -> active 态
   const db = geo.draw;
@@ -93,15 +104,17 @@ try {
   if (errors.length) fail.push('CONSOLE ERRORS:\n' + errors.join('\n'));
   if (!R.controlsBelowGame) fail.push(`控制条未置于游戏区下方（重叠 ${R.overlapPixels}px）`);
   if (!R.drawRightOfMove) fail.push('左右未对调（划线键应在右、移动盘应在左）');
-  if (!R.mcJustifyCenter) fail.push(`控制条未居中（justify-content=${geo.mcJustify}，应为 center）`);
-  if (!R.controlsCentered) fail.push(`控件未整体居中（控制条中心与屏幕中线偏差过大：${Math.abs(geo.mc.cx - geo.screenCenterX)}px）`);
+  if (!R.buttonsSplit) fail.push('两个大按钮未分居两端（应移动贴左、划线贴右）');
+  if (!R.knobAbsolute) fail.push('摇杆钮未采用 absolute 定位（无法精确居中）');
+  if (!R.knobCenteredInPad) fail.push(`摇杆钮未居中于大圈（偏差：x=${Math.abs(geo.knob.cx-geo.move.cx)} y=${Math.abs(geo.knob.cy-geo.move.cy)}px）`);
+  if (!R.knobReturnsCenter) fail.push('拖动抬起后摇杆未回到大圈中心');
   if (!R.globalUserSelectNone) fail.push('全局 user-select 未禁用（触摸设备 body.userSelect 非 none）');
   if (!R.globalContextmenuBlocked) fail.push('全局 contextmenu 未被拦截（长按菜单仍可能弹出）');
   if (!(R.knobMovedPx > 5)) fail.push('移动盘拖动无效（摇杆位移 ' + R.knobMovedPx + 'px）');
   if (!R.drawActive) fail.push('按住划线键未进入 active 态');
 
   if (fail.length) { console.error('\n❌ MOBILE CONTROL TEST FAILED:\n' + fail.join('\n')); process.exit(2); }
-  console.log('\n✅ MOBILE CONTROL TEST PASSED —— 控件已移至游戏区下方、左右对调、整体居中、全局禁用长按菜单、可拖动');
+  console.log('\n✅ MOBILE CONTROL TEST PASSED —— 控件在游戏区下方、左右分居两端、摇杆钮居中于大圈、全局禁用长按菜单、可拖动');
   process.exit(0);
 } catch (err) {
   console.error('MOBILE CONTROL TEST FAILED:', err.message);
