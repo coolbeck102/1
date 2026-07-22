@@ -60,11 +60,14 @@ kbd{background:#444;border-radius:3px;padding:2px 5px}
 .pw{background:rgba(0,0,0,.7);border-radius:8px;padding:5px 8px;font-size:12px;font-weight:bold;border:1px solid #888}
 .pw.shield{border-color:#4fd0ff;color:#4fd0ff}.pw.speed{border-color:#ffd60a;color:#ffd60a}.pw.bomb{border-color:#ff6b6b;color:#ff6b6b}
 #tutorialHint{position:absolute;bottom:14px;left:50%;transform:translateX(-50%);z-index:12;background:rgba(0,0,0,.82);border:1px solid #ffd60a;color:#ffd60a;border-radius:8px;padding:8px 14px;font-size:14px;font-weight:bold;pointer-events:none;max-width:92%}
-#mobileControls{position:absolute;inset:0;z-index:15;pointer-events:none}
-#drawBtn{position:absolute;left:14px;bottom:18px;pointer-events:auto;background:#ffd60a;color:#151515;border-radius:50%;width:84px;height:84px;font-weight:bold;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.1;box-shadow:0 4px 16px rgba(0,0,0,.5)}
+/* 手机控制条：位于游戏区下方，不遮挡画面；左右对调（移动在左、划线在右） */
+#mobileControls{display:flex;align-items:center;justify-content:space-between;gap:16px;width:min(100vw,800px);height:150px;margin:6px auto 0;padding:0 22px;box-sizing:border-box;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;touch-action:manipulation}
+#mobileControls.hidden{display:none!important}
+#drawBtn{order:2;pointer-events:auto;background:#ffd60a;color:#151515;border:none;border-radius:50%;width:88px;height:88px;font-weight:bold;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.1;box-shadow:0 4px 16px rgba(0,0,0,.5);-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;touch-action:none}
 #drawBtn.active{background:#ff3b3b;color:#fff}
-#movePad{position:absolute;right:14px;bottom:18px;pointer-events:auto;width:120px;height:120px;border-radius:50%;background:rgba(255,255,255,.08);border:2px solid rgba(255,255,255,.25);display:flex;align-items:center;justify-content:center}
-#moveKnob{width:54px;height:54px;border-radius:50%;background:rgba(143,211,255,.85);color:#102;font-weight:bold;display:flex;align-items:center;justify-content:center;transform:translate(-50%,-50%)}
+#movePad{order:1;pointer-events:auto;touch-action:none;width:128px;height:128px;border-radius:50%;background:rgba(255,255,255,.08);border:2px solid rgba(255,255,255,.25);display:flex;align-items:center;justify-content:center;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+#moveKnob{width:56px;height:56px;border-radius:50%;background:rgba(143,211,255,.85);color:#102;font-weight:bold;display:flex;align-items:center;justify-content:center;transform:translate(-50%,-50%);-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+@media (max-width:820px){ #tip{display:none} h1{font-size:26px;margin:10px 0 2px} .sub{margin:0 0 6px} #panel{margin:4px 0} }
 /* —— 选关网格 —— */
 #levelGrid{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;width:min(92vw,540px);margin:12px 0}
 .lvl-cell{aspect-ratio:1;border-radius:10px;background:#2a3326;color:#cfe;border:1px solid #3c4a36;font-weight:bold;font-size:16px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:transform .08s}
@@ -184,10 +187,6 @@ kbd{background:linear-gradient(180deg,#3a4438,#242c22);border:1px solid rgba(255
 <div id="drawMeter" class="hidden"><span id="drawMeterLabel">本次占领 0.0% / 10%</span><div id="drawMeterBar"><i id="drawMeterFill"></i></div></div>
 <div id="powerHUD"></div>
 <div id="tutorialHint" class="hidden"></div>
-<div id="mobileControls" class="hidden">
-  <button id="drawBtn">划线<br><small>按住</small></button>
-  <div id="movePad"><div id="moveKnob">移动</div></div>
-</div>
 <div id="levelResult" class="overlay hidden"><div class="card"><h2 id="resultTitle">关卡完成！</h2><p id="resultText"></p><button id="nextLevelBtn">进入下一关</button></div></div>
 <div id="pauseScreen" class="overlay hidden"><div class="card"><h2>已暂停</h2><p>深呼吸，准备好再继续。</p><button id="resumeBtn">继续</button><button id="quitBtn" class="icon-btn">返回菜单</button></div></div>
 <div id="gameOverScreen" class="overlay hidden"><div class="card"><h2 id="overTitle">挑战失败</h2><p id="overText"></p><button id="replayBtn">再玩一次</button><button id="menuBtn" class="icon-btn">返回菜单</button></div></div>
@@ -205,7 +204,11 @@ kbd{background:linear-gradient(180deg,#3a4438,#242c22);border:1px solid rgba(255
   <p style="font-size:12px;color:#9aa">① 沿绿色边沿移动　② 按住 J / 划线进入黑区　③ 回到边沿封闭区域夺回地盘</p>
 </div>
 </div>
-<div id="tip">电脑：<kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> / 方向键移动，按住 <kbd>J</kbd> 划线，<kbd>P</kbd> 暂停。手机：左下按住「划线」，右下拖动「移动」。</div>
+<div id="mobileControls" class="hidden">
+  <button id="drawBtn">划线<br><small>按住</small></button>
+  <div id="movePad"><div id="moveKnob">移动</div></div>
+</div>
+<div id="tip">电脑：<kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> / 方向键移动，按住 <kbd>J</kbd> 划线，<kbd>P</kbd> 暂停。手机：左侧拖动「移动」，右侧按住「划线」。</div>
 
 <!-- 全屏：相册 -->
 <div id="galleryScreen" class="fullscreen hidden">
@@ -821,6 +824,7 @@ function resetPad(){ moveTouchActive=false; moveDX=0; moveDY=0; moveKnob.style.t
 movePad.addEventListener("pointerdown",e=>{ e.preventDefault(); movePad.setPointerCapture(e.pointerId); updatePad(e); });
 movePad.addEventListener("pointermove",e=>{ e.preventDefault(); updatePad(e); });
 movePad.addEventListener("pointerup",resetPad); movePad.addEventListener("pointercancel",resetPad); movePad.addEventListener("lostpointercapture",resetPad);
+mobileControls.addEventListener("contextmenu",e=>e.preventDefault());
 canvas.addEventListener("pointerdown",()=>{ if(victory) finishVictory(); });
 
 window.__h5test={triggerVictory:()=>{ if(!gameStarted||gameOver||victory) return false; startVictory(curIdx+1); return true; },victoryState:()=>{ if(!victory) return null; const cx=player.x*CELL+CELL/2,cy=player.y*CELL+CELL/2; const maxR=Math.hypot(W,H)*1.1,R=victoryT*maxR; let uncovered=0; for(let y=0;y<GH;y++) for(let x=0;x<GW;x++){ if(mask[y*GW+x]!==0) continue; const dpx=(x+0.5)*CELL-cx,dpy=(y+0.5)*CELL-cy; if(dpx*dpx+dpy*dpy>R*R) uncovered++; } return {victoryT,R,maxR,uncovered,victoryHold}; },getSave:()=>JSON.parse(JSON.stringify(Save.data)),unlockAll:()=>{ Save.purchaseAll(); renderLevelGrid(); return true; },setMuted:(m)=>{ Save.data.muted=m; Save.save(); Sound.setMuted(m); },spawnAudit:(n)=>{ let bad=0,total=0; for(let t=0;t<n;t++){ initLevel((Math.random()*40)|0); for(const e of enemies){ total++; if(getM(e.x|0,e.y|0)!==0) bad++; } } return {trials:n,total,bad}; }};
