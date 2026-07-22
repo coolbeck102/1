@@ -43,6 +43,10 @@ button:focus-visible{outline:none;box-shadow:0 0 0 3px rgba(143,227,90,.5)}
 .icon-btn:active{box-shadow:0 1px 0 rgba(0,0,0,.4)}
 #gameWrap{position:relative;width:min(100vw,800px);aspect-ratio:4/3;border:3px solid #4a5a40;background:#000;overflow:hidden;border-radius:10px;box-shadow:0 14px 50px rgba(0,0,0,.6)}
 canvas{width:100%;height:100%;display:block;touch-action:none;user-select:none}
+/* 触摸设备全局禁止长按选择/呼叫菜单（长按屏幕会触发系统选择功能） */
+@media (pointer:coarse){
+  *{ -webkit-user-select:none; -webkit-touch-callout:none; user-select:none; -webkit-tap-highlight-color:transparent; }
+}
 .hidden{display:none!important}
 #tip{width:min(100vw,800px);margin:9px 0 24px;padding:8px 10px;background:#1a2018;color:#bbb;border-radius:8px;font-size:13px}
 kbd{background:#444;border-radius:3px;padding:2px 5px}
@@ -61,7 +65,7 @@ kbd{background:#444;border-radius:3px;padding:2px 5px}
 .pw.shield{border-color:#4fd0ff;color:#4fd0ff}.pw.speed{border-color:#ffd60a;color:#ffd60a}.pw.bomb{border-color:#ff6b6b;color:#ff6b6b}
 #tutorialHint{position:absolute;bottom:14px;left:50%;transform:translateX(-50%);z-index:12;background:rgba(0,0,0,.82);border:1px solid #ffd60a;color:#ffd60a;border-radius:8px;padding:8px 14px;font-size:14px;font-weight:bold;pointer-events:none;max-width:92%}
 /* 手机控制条：位于游戏区下方，不遮挡画面；左右对调（移动在左、划线在右） */
-#mobileControls{display:flex;align-items:center;justify-content:space-between;gap:16px;width:min(100vw,800px);height:150px;margin:6px auto 0;padding:0 22px;box-sizing:border-box;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;touch-action:manipulation}
+#mobileControls{display:flex;align-items:center;justify-content:center;gap:16px;width:min(100vw,800px);height:150px;margin:6px auto 0;padding:0 22px;box-sizing:border-box;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;touch-action:manipulation}
 #mobileControls.hidden{display:none!important}
 #drawBtn{order:2;pointer-events:auto;background:#ffd60a;color:#151515;border:none;border-radius:50%;width:88px;height:88px;font-weight:bold;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.1;box-shadow:0 4px 16px rgba(0,0,0,.5);-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;touch-action:none}
 #drawBtn.active{background:#ff3b3b;color:#fff}
@@ -824,7 +828,7 @@ function resetPad(){ moveTouchActive=false; moveDX=0; moveDY=0; moveKnob.style.t
 movePad.addEventListener("pointerdown",e=>{ e.preventDefault(); movePad.setPointerCapture(e.pointerId); updatePad(e); });
 movePad.addEventListener("pointermove",e=>{ e.preventDefault(); updatePad(e); });
 movePad.addEventListener("pointerup",resetPad); movePad.addEventListener("pointercancel",resetPad); movePad.addEventListener("lostpointercapture",resetPad);
-mobileControls.addEventListener("contextmenu",e=>e.preventDefault());
+if(matchMedia('(pointer:coarse)').matches || 'ontouchstart' in window){ document.addEventListener("contextmenu",e=>e.preventDefault()); }
 canvas.addEventListener("pointerdown",()=>{ if(victory) finishVictory(); });
 
 window.__h5test={triggerVictory:()=>{ if(!gameStarted||gameOver||victory) return false; startVictory(curIdx+1); return true; },victoryState:()=>{ if(!victory) return null; const cx=player.x*CELL+CELL/2,cy=player.y*CELL+CELL/2; const maxR=Math.hypot(W,H)*1.1,R=victoryT*maxR; let uncovered=0; for(let y=0;y<GH;y++) for(let x=0;x<GW;x++){ if(mask[y*GW+x]!==0) continue; const dpx=(x+0.5)*CELL-cx,dpy=(y+0.5)*CELL-cy; if(dpx*dpx+dpy*dpy>R*R) uncovered++; } return {victoryT,R,maxR,uncovered,victoryHold}; },getSave:()=>JSON.parse(JSON.stringify(Save.data)),unlockAll:()=>{ Save.purchaseAll(); renderLevelGrid(); return true; },setMuted:(m)=>{ Save.data.muted=m; Save.save(); Sound.setMuted(m); },spawnAudit:(n)=>{ let bad=0,total=0; for(let t=0;t<n;t++){ initLevel((Math.random()*40)|0); for(const e of enemies){ total++; if(getM(e.x|0,e.y|0)!==0) bad++; } } return {trials:n,total,bad}; }};
