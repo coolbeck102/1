@@ -47,11 +47,19 @@ canvas{width:100%;height:100%;display:block;touch-action:none;user-select:none}
 @media (pointer:coarse){
   *{ -webkit-user-select:none; -webkit-touch-callout:none; user-select:none; -webkit-tap-highlight-color:transparent; }
 }
+/* 手机端主界面（开始/相册/设置）铺满全屏，避免被 4:3 游戏框裁掉按钮 */
+@media (pointer:coarse){
+  #startScreen{position:fixed;inset:0;width:100vw;height:100vh;z-index:40;padding:30px 20px;overflow-y:auto;justify-content:flex-start}
+  #startScreen h2{font-size:30px;margin-top:8px}
+  #startScreen p{font-size:13px}
+  .menu-row{margin-top:16px}
+  .menu-row button{padding:12px 16px;font-size:14px}
+}
 .hidden{display:none!important}
 #tip{width:min(100vw,800px);margin:9px 0 24px;padding:8px 10px;background:#1a2018;color:#bbb;border-radius:8px;font-size:13px}
 kbd{background:#444;border-radius:3px;padding:2px 5px}
 /* 游戏内覆盖层 */
-.overlay{position:absolute;inset:0;z-index:20;background:rgba(4,8,4,.9);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:22px}
+.overlay{position:absolute;inset:0;z-index:20;background:rgba(4,8,4,.9);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:22px;overflow-y:auto}
 #startScreen{background:rgba(4,8,4,.68)}
 #startScreen h2,#levelResult h2,#pauseScreen h2,#gameOverScreen h2{margin:0 0 10px;color:#ffd60a;font-size:38px;text-shadow:0 2px 10px rgba(255,214,10,.4)}
 #startScreen p,#levelResult p,#pauseScreen p,#gameOverScreen p{margin:5px 0;line-height:1.55}
