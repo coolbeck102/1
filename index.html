@@ -67,7 +67,7 @@ canvas{width:100%;height:100%;display:block;touch-action:none;user-select:none}
   #panel .hud-stat{padding:3px 7px;font-size:11px}
   #panel .hud-capture{display:none}
   #panel .icon-btn{padding:5px 9px;font-size:12px}
-  #gameWrap{aspect-ratio:auto;width:100vw;height:calc(100vh - 205px);height:calc(100dvh - 205px);max-height:135vw;border-radius:0;border-width:2px}
+  #gameWrap{aspect-ratio:2/3;width:min(100vw, calc((100dvh - 205px) * 2 / 3));height:auto;max-height:calc(100dvh - 205px);border-radius:0;border-width:2px}
 }
 .hidden{display:none!important}
 #tip{width:min(100vw,800px);margin:9px 0 24px;padding:8px 10px;background:#1a2018;color:#bbb;border-radius:8px;font-size:13px}
@@ -291,7 +291,10 @@ kbd{background:linear-gradient(180deg,#3a4438,#242c22);border:1px solid rgba(255
 <script>
 (()=>{
 const $=id=>document.getElementById(id),canvas=$("game"),ctx=canvas.getContext("2d");
-const W=800,H=600,CELL=5,GW=W/CELL,GH=H/CELL,TARGET=75,SCORE_PER_PCT=100;
+const isMobile=matchMedia("(pointer:coarse)").matches||/Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
+/* 手机端游戏世界改为竖向 600x900(2:3)：让游戏区更高，且显示框同比例→不被 CSS 拉伸变形；桌面保持 4:3 */
+const W=isMobile?600:800, H=isMobile?900:600, CELL=5, GW=W/CELL, GH=H/CELL, TARGET=75, SCORE_PER_PCT=100;
+canvas.width=W; canvas.height=H;
 let BG_DIR="bg/"; // 自适应：Vite 构建后 public/ 即根，纯静态服务器需带 public/ 前缀，ensureBgList 会探测后者
 /* 角色与道具采用程序化绘制；UI 用 emoji 占位。素材（PNG 精灵）暂不接入，留待 UI 阶段处理 */
 
@@ -389,7 +392,6 @@ let mask,player,enemies=[],obstacles=[],explosions=[],texts=[],powerups=[],keys=
   lives=3,score=0,curIdx=0,gameStarted=false,gameOver=false,win=false,paused=false,gameOverShown=false,
   moveCooldown=0,tutorialStep=-1,pendingNextLevel=null,levelStartScore=0,levelStartLives=3,
   shake=0,powerSpawnTimer=0,lastDrawSound=0,victory=false,victoryT=0,victoryNext=null,victoryHold=0;
-const isMobile=matchMedia("(pointer:coarse)").matches||/Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
 let drawTouchActive=false,moveTouchActive=false,moveDX=0,moveDY=0;
 
 function getM(x,y){ if(x<0||y<0||x>=GW||y>=GH) return 1; return mask[y*GW+x]; }
