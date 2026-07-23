@@ -29,14 +29,21 @@ try {
   const geo = await page.evaluate(() => {
     const cv = document.getElementById('game');
     const gw = document.getElementById('gameWrap');
+    const db = document.getElementById('drawBtn');
+    const mp = document.getElementById('movePad');
     const r = gw.getBoundingClientRect();
+    const rdb = db.getBoundingClientRect();
+    const rmp = mp.getBoundingClientRect();
     return {
       cw: cv.width, ch: cv.height,
-      gwW: r.width, gwH: r.height,
+      gwW: r.width, gwH: r.height, gwBottom: r.bottom,
+      drawBottom: rdb.bottom, drawTop: rdb.top,
+      moveBottom: rmp.bottom, moveTop: rmp.top,
       innerH: window.innerHeight,
     };
   });
   log('canvas 内部:', geo.cw + 'x' + geo.ch, '| gameWrap 显示:', Math.round(geo.gwW) + 'x' + Math.round(geo.gwH));
+  log('视口高:', geo.innerH, '| 游戏区底:', Math.round(geo.gwBottom), '| 划线键底:', Math.round(geo.drawBottom), '| 移动盘底:', Math.round(geo.moveBottom));
 
   // 断言1：手机端世界是竖向 600x900
   if (geo.cw === 600 && geo.ch === 900) log('PASS 世界为竖向 600x900');
@@ -53,6 +60,15 @@ try {
   else fail.push(`游戏区高度不足: ${Math.round(geo.gwH)}`);
   if (geo.gwH <= geo.innerH) log('PASS 游戏区未超出视口');
   else fail.push('游戏区超出视口高度');
+
+  // 断言3b：两个控制按钮完整落在视口内（本次修复重点）
+  const maxBtnBottom = Math.max(geo.drawBottom, geo.moveBottom);
+  if (maxBtnBottom <= geo.innerH) log('PASS 控制按钮完整在视口内 (按钮底=' + Math.round(maxBtnBottom) + ' <= 视口=' + geo.innerH + ')');
+  else fail.push('控制按钮被挤出视口: 按钮底=' + Math.round(maxBtnBottom) + ' > 视口=' + geo.innerH);
+  // 断言3c：按钮不与游戏区重叠（按钮顶 >= 游戏区底）
+  const minBtnTop = Math.min(geo.drawTop, geo.moveTop);
+  if (minBtnTop >= geo.gwBottom - 1) log('PASS 按钮不遮挡游戏区 (按钮顶=' + Math.round(minBtnTop) + ' >= 游戏区底=' + Math.round(geo.gwBottom) + ')');
+  else fail.push('按钮与游戏区重叠: 按钮顶=' + Math.round(minBtnTop) + ' < 游戏区底=' + Math.round(geo.gwBottom));
 
   // 断言4：刷怪/绘制无异常（spawnAudit 需传参 n，否则循环不执行 total 恒 0）
   const r = await page.evaluate(() => window.__h5test.spawnAudit(1));

@@ -67,7 +67,7 @@ canvas{width:100%;height:100%;display:block;touch-action:none;user-select:none}
   #panel .hud-stat{padding:3px 7px;font-size:11px}
   #panel .hud-capture{display:none}
   #panel .icon-btn{padding:5px 9px;font-size:12px}
-  #gameWrap{aspect-ratio:2/3;width:min(100vw, calc((100dvh - 205px) * 2 / 3));height:auto;max-height:calc(100dvh - 205px);border-radius:0;border-width:2px}
+  #gameWrap{aspect-ratio:2/3;width:min(100vw, calc((100dvh - 250px - env(safe-area-inset-bottom,0px)) * 2 / 3));height:auto;max-height:calc(100dvh - 250px - env(safe-area-inset-bottom,0px));border-radius:0;border-width:2px}
 }
 .hidden{display:none!important}
 #tip{width:min(100vw,800px);margin:9px 0 24px;padding:8px 10px;background:#1a2018;color:#bbb;border-radius:8px;font-size:13px}
@@ -87,7 +87,7 @@ kbd{background:#444;border-radius:3px;padding:2px 5px}
 .pw.shield{border-color:#4fd0ff;color:#4fd0ff}.pw.speed{border-color:#ffd60a;color:#ffd60a}.pw.bomb{border-color:#ff6b6b;color:#ff6b6b}
 #tutorialHint{position:absolute;bottom:14px;left:50%;transform:translateX(-50%);z-index:12;background:rgba(0,0,0,.82);border:1px solid #ffd60a;color:#ffd60a;border-radius:8px;padding:8px 14px;font-size:14px;font-weight:bold;pointer-events:none;max-width:92%}
 /* 手机控制条：位于游戏区下方，不遮挡画面；左右对调（移动在左、划线在右） */
-#mobileControls{display:flex;align-items:center;justify-content:space-between;gap:16px;width:min(100vw,800px);height:150px;margin:6px auto 0;padding:0 22px;box-sizing:border-box;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;touch-action:manipulation}
+#mobileControls{display:flex;align-items:center;justify-content:space-between;gap:16px;width:min(100vw,800px);height:140px;margin:6px auto 0;padding:0 22px calc(env(safe-area-inset-bottom,0px));box-sizing:border-box;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;touch-action:manipulation}
 #mobileControls.hidden{display:none!important}
 #drawBtn{order:2;pointer-events:auto;background:#ffd60a;color:#151515;border:none;border-radius:50%;width:88px;height:88px;font-weight:bold;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.1;box-shadow:0 4px 16px rgba(0,0,0,.5);-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;touch-action:none}
 #drawBtn.active{background:#ff3b3b;color:#fff}
