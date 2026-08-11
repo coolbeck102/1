@@ -23,7 +23,8 @@ page.on('console', (m) => {
 });
 page.on('pageerror', (e) => errors.push('pageerror: ' + e.message));
 page.on('response', (r) => {
-  if (r.status() >= 400 && !r.url().includes('favicon')) {
+  // favicon 与可选背景图资源(bg/) 为预期内的探测/缺失，游戏已优雅降级，不计为错误
+  if (r.status() >= 400 && !r.url().includes('favicon') && !r.url().includes('/bg/')) {
     badResponses.push(r.status() + ' ' + r.url());
   }
 });
@@ -106,31 +107,26 @@ try {
   // 过关后应写入存档（解锁了第 1 张图）
   result.saveAfterVictory = await page.evaluate(() => window.__h5test && window.__h5test.getSave());
 
-  // 10) 解锁流程：构造"已通关到第10关"的存档 -> 当前关变为第11关(未解锁) ->
-  //     开始按钮变"解锁并继续" -> 点击弹解锁框 -> 看广告 mock -> 断言 adBlocks+1
+  // 10) 全免费验证：构造"已通关到第10关"的存档 -> 当前关变为第11关（原需解锁） ->
+  //     点击开始应直接进入游戏（不再弹解锁框），所有关卡均可直接进
   await page.evaluate(() => {
     const s = JSON.parse(localStorage.getItem('kcfx_save_v1') || '{}');
-    s.maxCleared = 10; // 通关第10关后，下一关为第11关，超出免费范围需解锁
+    s.maxCleared = 10; // 通关第10关后，下一关为第11关
     localStorage.setItem('kcfx_save_v1', JSON.stringify(s));
   });
   await page.reload({ waitUntil: 'load', timeout: 30000 });
-  const curLocked = await page.evaluate(() => {
+  const curFree = await page.evaluate(() => {
     const el = document.querySelector('#levelGrid .cur-lvl');
     return el ? el.textContent : null;
   });
-  result.curLevelWhenLocked = curLocked;
-  result.startBtnText = await page.evaluate(() => document.querySelector('#startBtn').textContent);
-  await page.click('#startBtn'); // 当前关未解锁 -> 弹解锁框
-  await page.waitForFunction(() => !document.querySelector('#unlockModal')?.classList.contains('hidden'), { timeout: 4000 });
-  result.unlockModalShown = true;
-  await page.click('#adUnlockBtn'); // 触发广告 mock
-  await page.waitForFunction(() => !document.querySelector('#adOverlay')?.classList.contains('hidden'), { timeout: 4000 });
-  await page.click('#adSkip'); // 测试跳过
-  await page.waitForFunction(
-    () => (window.__h5test && window.__h5test.getSave().adBlocks >= 1),
-    { timeout: 6000 }
-  );
-  result.adUnlocked = true;
+  result.currentLevelTextFree = curFree;
+  result.startBtnTextFree = await page.evaluate(() => document.querySelector('#startBtn').textContent);
+  // 全免费后不应再存在解锁弹窗 DOM
+  result.unlockModalExists = await page.evaluate(() => !!document.querySelector('#unlockModal'));
+  // 点击开始：直接进入运行态，不弹解锁框
+  await page.click('#startBtn');
+  await page.waitForFunction(() => document.querySelector('#startScreen')?.classList.contains('hidden'), { timeout: 8000 });
+  result.freeStartEntered = true;
 
   await browser.close();
 
@@ -144,17 +140,17 @@ try {
   if (!result.currentLevelText || !result.currentLevelText.includes('第 1 关')) fail.push('当前关显示异常: ' + result.currentLevelText);
   if (!result.hasLevelGrid) fail.push('关卡显示容器缺失');
   if (!result.galleryOpened) fail.push('相册未能打开');
-  if (!result.saveBaseline || result.saveBaseline.purchased !== false || result.saveBaseline.maxCleared !== 0) fail.push('存档基线异常: ' + JSON.stringify(result.saveBaseline));
+  if (!result.saveBaseline || result.saveBaseline.maxCleared !== 0) fail.push('存档基线异常: ' + JSON.stringify(result.saveBaseline));
   if (!result.started) fail.push('点击开始后未进入运行态');
   if (!result.pauseShown || !result.resumed) fail.push('暂停/恢复异常');
   if (!result.victoryTriggered) fail.push('过关动画未能触发');
   if (!result.victoryFullyRevealed) fail.push('过关时图片未完全揭示(仍存在未覆盖黑块)');
   if (!result.victoryResultShown) fail.push('过关动画后结算界面未弹出');
   if (!result.saveAfterVictory || result.saveAfterVictory.maxCleared < 1) fail.push('过关后未写入存档(已解锁图): ' + JSON.stringify(result.saveAfterVictory));
-  if (!result.unlockModalShown) fail.push('当前关未解锁时点击开始未弹出解锁弹窗');
-  if (result.curLevelWhenLocked && !result.curLevelWhenLocked.includes('第 11 关')) fail.push('未解锁时当前关应显示第11关: ' + result.curLevelWhenLocked);
-  if (result.startBtnText !== '解锁并继续') fail.push('未解锁关开始按钮文案异常: ' + result.startBtnText);
-  if (!result.adUnlocked) fail.push('看广告 mock 后未解锁后续关卡');
+  if (result.unlockModalExists) fail.push('全免费后仍存在解锁弹窗 DOM(#unlockModal)');
+  if (!result.freeStartEntered) fail.push('全免费后点击关卡未能直接进入游戏');
+  if (result.currentLevelTextFree && !result.currentLevelTextFree.includes('第 11 关')) fail.push('全免费后当前关应显示第11关: ' + result.currentLevelTextFree);
+  if (result.startBtnTextFree && result.startBtnTextFree.includes('解锁')) fail.push('全免费后开始按钮仍含"解锁"文案: ' + result.startBtnTextFree);
 
   if (fail.length) {
     console.error('\n❌ SMOKE TEST FAILED:\n' + fail.join('\n'));

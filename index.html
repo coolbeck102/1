@@ -103,8 +103,6 @@ kbd{background:#444;border-radius:3px;padding:2px 5px}
 .lvl-cell.sel{outline:3px solid #ffd60a;outline-offset:1px}
 .cur-lvl{display:inline-block;font-size:18px;font-weight:600;padding:10px 22px;color:var(--txt-2);background:var(--bg-2);border:1px solid var(--line-strong);border-radius:999px;margin:4px 0}
 .cur-lvl b{color:var(--lime);font-size:26px;margin:0 2px}
-.cur-lvl-locked{color:var(--txt-3)}
-.cur-lvl-locked b{color:var(--danger)}
 .card{width:min(88%,400px);background:var(--bg-1);border:1px solid var(--line-strong);border-radius:var(--r-lg);padding:24px;box-shadow:var(--sh-2);display:flex;flex-direction:column;align-items:center}
 .card h2{margin-top:0}
 .card button{width:100%;margin-top:8px}
@@ -126,13 +124,6 @@ kbd{background:#444;border-radius:3px;padding:2px 5px}
 .g-lock{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:26px;color:#fff;text-shadow:0 2px 6px #000}
 .g-light{position:fixed;inset:0;z-index:60;background:rgba(0,0,0,.92);display:flex;align-items:center;justify-content:center;padding:20px}
 .g-light img{max-width:94vw;max-height:86vh;border-radius:10px;box-shadow:0 10px 50px #000}
-.modal-box{background:#14201a;border:1px solid #2e6b3a;border-radius:14px;padding:22px;max-width:380px;text-align:center;box-shadow:0 14px 50px rgba(0,0,0,.6)}
-.modal-box p{line-height:1.6;margin:8px 0}
-.ad-screen{position:fixed;inset:0;z-index:60;background:#000;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff}
-.ad-screen .badge{position:absolute;top:14px;left:14px;background:#c33;color:#fff;font-size:12px;padding:4px 10px;border-radius:6px;font-weight:bold}
-.ad-screen .count{position:absolute;top:14px;right:14px;background:rgba(255,255,255,.15);padding:4px 12px;border-radius:20px;font-size:13px}
-.ad-screen .big{font-size:60px;margin-bottom:14px}
-.ad-screen .skip{position:absolute;bottom:26px;background:rgba(255,255,255,.18);color:#fff;border:0;border-radius:10px;padding:10px 18px;font-weight:bold;cursor:pointer}
 .set-row{display:flex;justify-content:space-between;align-items:center;width:min(90vw,340px);padding:12px 0;border-bottom:1px solid #243024}
 
 /* ================= 图形化皮肤：实色块面 + 厚度 + 图形重量（覆盖上方线性基础样式，删除本段即回滚） ================= */
@@ -160,7 +151,6 @@ button:focus-visible{outline:none;box-shadow:0 4px 0 var(--amber-shadow),0 0 0 3
 .hud-pctbar i{background:linear-gradient(180deg,var(--lime-strong),var(--lime) 45%,var(--lime-deep));box-shadow:inset 0 1px 0 rgba(255,255,255,.5);transition:width .2s}
 /* 当前关勋章 */
 .cur-lvl{background:linear-gradient(180deg,#24331f,#16210f);border:1px solid rgba(143,227,90,.5);border-radius:var(--r-md);padding:12px 26px;box-shadow:0 4px 0 var(--edge-d),inset 0 1px 0 rgba(255,255,255,.14)}
-.cur-lvl-locked{background:linear-gradient(180deg,#2a1a1a,#1a1010);border-color:rgba(255,90,78,.5)}
 /* 卡片：实心块 + 顶部品牌标签条 + 深投影 */
 .card{background:linear-gradient(180deg,#1c281c,#121a12);border:1px solid rgba(255,255,255,.12);border-radius:var(--r-lg);padding:28px 24px 24px;box-shadow:0 20px 55px rgba(0,0,0,.65),inset 0 2px 0 rgba(255,255,255,.09);position:relative;overflow:hidden}
 .card::before{content:"";position:absolute;top:0;left:0;right:0;height:6px;background:linear-gradient(90deg,var(--lime-deep),var(--lime) 50%,var(--lime-deep))}
@@ -178,7 +168,6 @@ button:focus-visible{outline:none;box-shadow:0 4px 0 var(--amber-shadow),0 0 0 3
 #movePad{background:rgba(14,22,14,.6);border:3px solid rgba(143,227,90,.35);box-shadow:inset 0 2px 6px rgba(0,0,0,.4)}
 #moveKnob{background:radial-gradient(circle at 35% 30%,var(--lime-strong),var(--lime) 58%,var(--lime-deep));box-shadow:0 3px 0 var(--lime-deep),inset 0 1px 0 rgba(255,255,255,.5)}
 /* 弹窗块 */
-.modal-box{background:linear-gradient(180deg,#1c281c,#101810);border:1px solid rgba(143,227,90,.3);border-radius:var(--r-lg);box-shadow:0 20px 55px rgba(0,0,0,.68),inset 0 2px 0 rgba(255,255,255,.09)}
 /* 选关格（若启用） */
 .lvl-cell{background:linear-gradient(180deg,#2c3a2c,#1a241a);border:1px solid rgba(255,255,255,.12);box-shadow:0 3px 0 var(--edge-d),inset 0 1px 0 rgba(255,255,255,.1)}
 .lvl-cell.cleared{background:linear-gradient(180deg,#24331f,#16210f);border-color:rgba(143,227,90,.5)}
@@ -230,7 +219,7 @@ body{
 </head>
 <body>
 <h1>昆虫防线</h1>
-<p class="sub">每过一关，解锁一张专属美女图 · 无限关卡挑战</p>
+<p class="sub">每过一关收集一张专属画面 · 无限关卡挑战</p>
 <div id="panel">
   <span class="hud-badge">关卡 <b id="level">1</b></span>
   <div class="hud-mid">
@@ -260,9 +249,9 @@ body{
 <div id="gameOverScreen" class="overlay hidden"><div class="card"><h2 id="overTitle">挑战失败</h2><p id="overText"></p><button id="replayBtn">再玩一次</button><button id="menuBtn" class="icon-btn">返回菜单</button></div></div>
 <div id="startScreen" class="overlay">
   <h2>昆虫防线</h2>
-  <p><b>夺回被昆虫侵占的区域，解锁美女图！</b></p>
-  <p>最高分：<span id="hiScore" class="score-stat">0</span>　已解锁：<span id="unlockCount" class="stat">0</span> 张</p>
-  <p style="color:#ffd60a">前 10 关免费，之后看广告 / 付费解锁更多关卡</p>
+  <p><b>夺回被昆虫侵占的区域，收集专属画面！</b></p>
+  <p>最高分：<span id="hiScore" class="score-stat">0</span>　已收集：<span id="unlockCount" class="stat">0</span> 张</p>
+  <p>无限关卡自由挑战</p>
   <div id="levelGrid"></div>
   <div class="menu-row">
     <button id="startBtn">开始挑战</button>
@@ -284,8 +273,8 @@ body{
 <!-- 全屏：相册 -->
 <div id="galleryScreen" class="fullscreen hidden">
   <div class="close-row"><button id="galleryBack" class="icon-btn">✕ 返回</button></div>
-  <h2>美女图相册</h2>
-  <p>已解锁 <span id="galleryCount">0/0</span> · 每过一关解锁一张</p>
+  <h2>画面相册</h2>
+  <p>已收集 <span id="galleryCount">0</span> 张</p>
   <div class="gallery-scroll-wrap">
     <div id="galleryGrid" class="gallery-grid"></div>
     <div class="gallery-scrollbar"><div class="gallery-scrollbar-thumb"></div></div>
@@ -302,36 +291,6 @@ body{
   <p style="font-size:12px;color:#9aa;margin-top:14px">清除后最高分、已解锁图片、关卡进度将全部重置。</p>
 </div>
 
-<!-- 解锁弹窗（mock） -->
-<div id="unlockModal" class="fullscreen hidden">
-  <div class="modal-box">
-    <h2>解锁关卡</h2>
-    <p id="unlockText"></p>
-    <button id="adUnlockBtn" style="width:100%;margin-top:8px">🎬 看广告解锁后续 5 关</button>
-    <button id="payUnlockBtn" class="icon-btn" style="width:100%;margin-top:8px">💎 付费永久解锁全部（¥6）</button>
-    <button id="unlockCancel" class="icon-btn" style="width:100%;margin-top:8px">取消</button>
-  </div>
-</div>
-
-<!-- 模拟激励视频广告 -->
-<div id="adOverlay" class="ad-screen hidden">
-  <div class="badge">广告</div>
-  <div class="count"><span id="adCount">3</span>s 后领取奖励</div>
-  <div class="big">🎬</div>
-  <p style="color:#ffd60a;font-weight:bold">（模拟激励视频 · 本地测试用）</p>
-  <button id="adSkip" class="skip">跳过（测试）</button>
-</div>
-
-<!-- 模拟支付 -->
-<div id="payOverlay" class="fullscreen hidden">
-  <div class="modal-box">
-    <h2>💎 永久解锁</h2>
-    <p>支付 <b style="color:#ffd60a">¥6</b> 即可永久解锁全部关卡。</p>
-    <p style="font-size:12px;color:#9aa">（模拟支付 · 本地测试用，上线时接入真实支付）</p>
-    <button id="payYes" style="width:100%;margin-top:8px">确认支付 ¥6</button>
-    <button id="payNo" class="icon-btn" style="width:100%;margin-top:8px">取消</button>
-  </div>
-</div>
 
 <script>
 (()=>{
@@ -364,15 +323,12 @@ const glowTrailR=makeGlow(255,59,59), glowTrailY=makeGlow(255,214,10), glowTrail
 /* ============ 本地存档（localStorage） ============ */
 const SAVE_KEY="kcfx_save_v1";
 const Save={
-  data:{maxCleared:0,clearedImages:[],adBlocks:0,purchased:false,highScore:0,muted:false},
+  data:{maxCleared:0,clearedImages:[],highScore:0,muted:false},
   load(){ try{ const s=localStorage.getItem(SAVE_KEY); if(s){ const o=JSON.parse(s); Object.assign(this.data,o); if(!Array.isArray(this.data.clearedImages)) this.data.clearedImages=[]; } }catch(e){} },
   save(){ try{ localStorage.setItem(SAVE_KEY,JSON.stringify(this.data)); }catch(e){} },
-  blockOf(n){ return Math.floor((n-1)/5); },
-  isLevelUnlocked(n){ const b=this.blockOf(n); if(b<=1) return true; if(this.data.purchased) return true; return (b-2)<this.data.adBlocks; },
+  isLevelUnlocked(){ return true; },
   clearLevel(n,score){ if(n>this.data.maxCleared) this.data.maxCleared=n; const lib=Math.max(1,bgList.length); const imgIdx=(n-1)%lib; if(!this.data.clearedImages.includes(imgIdx)) this.data.clearedImages.push(imgIdx); if(score>this.data.highScore) this.data.highScore=score; this.save(); },
-  unlockNextBlock(){ this.data.adBlocks++; this.save(); },
-  purchaseAll(){ this.data.purchased=true; this.save(); },
-  reset(){ this.data={maxCleared:0,clearedImages:[],adBlocks:0,purchased:false,highScore:0,muted:this.data.muted}; this.save(); }
+  reset(){ this.data={maxCleared:0,clearedImages:[],highScore:0,muted:this.data.muted}; this.save(); }
 };
 
 /* ============ 无限关卡生成（难度曲线） ============ */
@@ -390,13 +346,6 @@ function generateLevel(n){
   };
 }
 
-/* ============ 广告 / 付费 Mock 层（上线换真实 SDK） ============ */
-const Ad={
-  show(){ return new Promise(res=>{ const ov=$("adOverlay"); ov.classList.remove("hidden"); let t=3; $("adCount").textContent=t; const iv=setInterval(()=>{ t--; if(t<=0){ clearInterval(iv); ov.classList.add("hidden"); res(true); } else $("adCount").textContent=t; },1000); $("adSkip").onclick=()=>{ clearInterval(iv); ov.classList.add("hidden"); res(true); }; }); }
-};
-const Payment={
-  show(){ return new Promise(res=>{ const ov=$("payOverlay"); ov.classList.remove("hidden"); const done=v=>{ ov.classList.add("hidden"); res(v); }; $("payYes").onclick=()=>{ Sound.click(); done(true); }; $("payNo").onclick=()=>{ Sound.click(); done(false); }; }); }
-};
 
 /* ============ 音频系统 (WebAudio 程序化合成) ============ */
 const Sound=(()=>{
@@ -768,7 +717,7 @@ function drawVictory(){
 function gameLoop(ts){ if(victory) updateVictory(ts); else update(); draw(); requestAnimationFrame(gameLoop); }
 
 /* ============ 流程 / 界面 ============ */
-function showLevelResult(nextIdx){ pendingNextLevel=nextIdx; gameStarted=false; Sound.level(); const lv=generateLevel(curIdx+1).level; resultTitle.textContent="第 "+lv+" 关完成！"; resultText.textContent="本关得分：+"+(score-levelStartScore)+"\n损失生命："+(levelStartLives-lives)+"\n当前总分："+score+"\n已夺回区域："+percentEl.textContent+"\n已解锁美女图："+Save.data.clearedImages.length+" 张"; nextLevelBtn.textContent="进入第 "+(nextIdx+1)+" 关"; levelResult.classList.remove("hidden"); }
+function showLevelResult(nextIdx){ pendingNextLevel=nextIdx; gameStarted=false; Sound.level(); const lv=generateLevel(curIdx+1).level; resultTitle.textContent="第 "+lv+" 关完成！"; resultText.textContent="本关得分：+"+(score-levelStartScore)+"\n损失生命："+(levelStartLives-lives)+"\n当前总分："+score+"\n已夺回区域："+percentEl.textContent+"\n已收集画面："+Save.data.clearedImages.length+" 张"; nextLevelBtn.textContent="进入第 "+(nextIdx+1)+" 关"; levelResult.classList.remove("hidden"); }
 function showGameOver(won){ Sound.stopBGM(); if(!won) Sound.hurt(); overTitle.textContent="挑战失败"; overTitle.style.color="#ff7070"; overText.textContent="最终总分："+score+"　到达关卡："+generateLevel(curIdx+1).level+"\n最高分："+Save.data.highScore; gameOverScreen.classList.remove("hidden"); }
 function startVictory(nextIdx){ victory=true; victoryT=0; victoryNext=nextIdx; victoryHold=0; lastVictoryTs=0; gameStarted=false; Sound.stopBGM(); Sound.victory(); tutorialHint.classList.add("hidden"); }
 function finishVictory(){ if(!victory) return; victory=false; Save.clearLevel(curIdx+1,score); $("hiScore").textContent=Save.data.highScore; $("unlockCount").textContent=Save.data.clearedImages.length; if(victoryNext!==null){ showLevelResult(victoryNext); } }
@@ -787,27 +736,17 @@ function startGame(idx){ Sound.init(); if(Save.data.muted) Sound.setMuted(true);
 /* —— 选关网格 —— */
 function renderLevelGrid(){
   const lvl=Save.data.maxCleared+1;
-  const unlocked=Save.isLevelUnlocked(lvl);
-  if(unlocked){
-    levelGrid.innerHTML='<div class="cur-lvl">当前第 <b>'+lvl+'</b> 关</div>';
-    $("startBtn").textContent="开始第 "+lvl+" 关";
-  } else {
-    levelGrid.innerHTML='<div class="cur-lvl cur-lvl-locked">当前第 <b>'+lvl+'</b> 关 · 需解锁</div>';
-    $("startBtn").textContent="解锁并继续";
-  }
+  levelGrid.innerHTML='<div class="cur-lvl">当前第 <b>'+lvl+'</b> 关</div>';
+  $("startBtn").textContent="开始第 "+lvl+" 关";
   $("hiScore").textContent=Save.data.highScore;
   $("unlockCount").textContent=Save.data.clearedImages.length;
 }
-let pendingUnlockLevel=0;
-$("adUnlockBtn").onclick=()=>{ Sound.click(); $("unlockModal").classList.add("hidden"); Ad.show().then(ok=>{ if(ok){ Save.unlockNextBlock(); renderLevelGrid(); showBanner("已解锁后续 5 关！"); } }); };
-$("payUnlockBtn").onclick=()=>{ Sound.click(); $("unlockModal").classList.add("hidden"); Payment.show().then(ok=>{ if(ok){ Save.purchaseAll(); renderLevelGrid(); showBanner("已永久解锁全部关卡！"); } }); };
-$("unlockCancel").onclick=()=>{ Sound.click(); $("unlockModal").classList.add("hidden"); };
 
 /* —— 相册 —— */
 function openGallery(){ Sound.click(); $("galleryScreen").classList.remove("hidden"); renderGallery(); }
 function renderGallery(){
   const g=$("galleryGrid"); g.innerHTML="";
-  if(!bgList.length){ g.innerHTML='<p style="color:#aaa;padding:20px">暂无图片：把美女图放入 public/bg/ 后运行 npm run gen-bg</p>'; $("galleryCount").textContent="0/0"; syncGalleryScrollbar(); return; }
+  if(!bgList.length){ g.innerHTML='<p style="color:#aaa;padding:20px">暂无图片：把画面放入 public/bg/ 后运行 npm run gen-bg</p>'; $("galleryCount").textContent="0"; syncGalleryScrollbar(); return; }
   const unlockedSet=new Set(Save.data.clearedImages);
   const allUnlocked=unlockedSet.size>=bgList.length;
   /* 已解锁：按解锁顺序展示真图（不再按图片总数铺满上锁格） */
@@ -826,7 +765,7 @@ function renderGallery(){
     const l=document.createElement("div"); l.className="g-lock"; l.textContent="🔒"; cell.appendChild(l);
     g.appendChild(cell);
   }
-  $("galleryCount").textContent=unlockedSet.size+"/"+bgList.length;
+  $("galleryCount").textContent=unlockedSet.size;
   syncGalleryScrollbar();
 }
 $("galleryBtn").onclick=openGallery;
@@ -874,11 +813,7 @@ $("setMute").onclick=()=>{ Save.data.muted=!Save.data.muted; Save.save(); Sound.
 $("setReset").onclick=()=>{ if(confirm("确定清除所有进度？")){ Save.reset(); renderLevelGrid(); showBanner("进度已清除"); } };
 
 /* —— 按钮绑定 —— */
-$("startBtn").onclick=()=>{
-  const lvl=Save.data.maxCleared+1;
-  if(Save.isLevelUnlocked(lvl)){ Sound.click(); startGame(Save.data.maxCleared); }
-  else { pendingUnlockLevel=lvl; $("unlockText").textContent="第 "+lvl+" 关需要解锁。看完广告可解锁后续 5 关，或付费永久解锁全部关卡。"; $("unlockModal").classList.remove("hidden"); }
-};
+$("startBtn").onclick=()=>{ Sound.click(); startGame(Save.data.maxCleared); };
 $("replayBtn").onclick=()=>{ Sound.click(); startGame(curIdx); };
 $("menuBtn").onclick=()=>{ Sound.click(); Sound.stopBGM(); gameStarted=false; gameOver=false; gameOverShown=false; gameOverScreen.classList.add("hidden"); pauseScreen.classList.add("hidden"); renderLevelGrid(); startScreen.classList.remove("hidden"); if(isMobile) mobileControls.classList.add("hidden"); };
 nextLevelBtn.onclick=()=>{ Sound.click(); levelResult.classList.add("hidden"); if(pendingNextLevel!==null){ gameStarted=true; Sound.startBGM(); initLevel(pendingNextLevel); } };
@@ -901,7 +836,7 @@ movePad.addEventListener("pointerup",resetPad); movePad.addEventListener("pointe
 if(matchMedia('(pointer:coarse)').matches || 'ontouchstart' in window){ document.addEventListener("contextmenu",e=>e.preventDefault()); }
 canvas.addEventListener("pointerdown",()=>{ if(victory) finishVictory(); });
 
-window.__h5test={triggerVictory:()=>{ if(!gameStarted||gameOver||victory) return false; startVictory(curIdx+1); return true; },victoryState:()=>{ if(!victory) return null; const cx=player.x*CELL+CELL/2,cy=player.y*CELL+CELL/2; const maxR=Math.hypot(W,H)*1.1,R=victoryT*maxR; let uncovered=0; for(let y=0;y<GH;y++) for(let x=0;x<GW;x++){ if(mask[y*GW+x]!==0) continue; const dpx=(x+0.5)*CELL-cx,dpy=(y+0.5)*CELL-cy; if(dpx*dpx+dpy*dpy>R*R) uncovered++; } return {victoryT,R,maxR,uncovered,victoryHold}; },getSave:()=>JSON.parse(JSON.stringify(Save.data)),unlockAll:()=>{ Save.purchaseAll(); renderLevelGrid(); return true; },setMuted:(m)=>{ Save.data.muted=m; Save.save(); Sound.setMuted(m); },spawnAudit:(n)=>{ let bad=0,total=0; for(let t=0;t<n;t++){ initLevel((Math.random()*40)|0); for(const e of enemies){ total++; if(getM(e.x|0,e.y|0)!==0) bad++; } } return {trials:n,total,bad}; }};
+window.__h5test={triggerVictory:()=>{ if(!gameStarted||gameOver||victory) return false; startVictory(curIdx+1); return true; },victoryState:()=>{ if(!victory) return null; const cx=player.x*CELL+CELL/2,cy=player.y*CELL+CELL/2; const maxR=Math.hypot(W,H)*1.1,R=victoryT*maxR; let uncovered=0; for(let y=0;y<GH;y++) for(let x=0;x<GW;x++){ if(mask[y*GW+x]!==0) continue; const dpx=(x+0.5)*CELL-cx,dpy=(y+0.5)*CELL-cy; if(dpx*dpx+dpy*dpy>R*R) uncovered++; } return {victoryT,R,maxR,uncovered,victoryHold}; },getSave:()=>JSON.parse(JSON.stringify(Save.data)),unlockAll:()=>{ Save.data.maxCleared=999; Save.save(); renderLevelGrid(); return true; },setMuted:(m)=>{ Save.data.muted=m; Save.save(); Sound.setMuted(m); },spawnAudit:(n)=>{ let bad=0,total=0; for(let t=0;t<n;t++){ initLevel((Math.random()*40)|0); for(const e of enemies){ total++; if(getM(e.x|0,e.y|0)!==0) bad++; } } return {trials:n,total,bad}; }};
 Save.load(); ensureBgList(); renderLevelGrid(); initLevel(0); gameLoop();
 })();
 </script>
