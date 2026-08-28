@@ -222,6 +222,35 @@ body{
 /* 菜单/弹窗背景：柔光散景，告别平板黑 */
 .overlay::before,.fullscreen::before{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(42% 42% at 20% 24%,rgba(143,227,90,.18),transparent 70%),radial-gradient(46% 46% at 82% 28%,rgba(255,206,77,.14),transparent 70%),radial-gradient(52% 52% at 50% 96%,rgba(34,211,238,.12),transparent 70%)}
 @media (prefers-reduced-motion:reduce){ #ambient{display:none} }
+/* ================= 主界面 Title Screen：沉浸式森林夜景 ================= */
+#startScreen.title-screen{position:fixed;inset:0;z-index:40;border-radius:0;background:radial-gradient(120% 90% at 50% 108%,rgba(20,46,18,.55),rgba(3,8,5,0) 55%),linear-gradient(180deg,rgba(3,8,5,.92) 0%,rgba(4,10,6,.5) 36%,rgba(4,10,6,.5) 62%,rgba(3,8,5,.94) 100%)}
+#startScreen .ts-inner{display:flex;flex-direction:column;align-items:center;animation:tsIn .7s ease both}
+@keyframes tsIn{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+#startScreen .ts-logo{display:flex;flex-direction:column;align-items:center;margin-bottom:32px}
+#startScreen .ts-beetle{width:62px;height:62px;margin-bottom:8px;filter:drop-shadow(0 4px 16px rgba(34,211,238,.5));animation:tsBob 3.2s ease-in-out infinite}
+@keyframes tsBob{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-8px) rotate(2deg)}}
+#startScreen .ts-title{margin:0;font-size:56px;line-height:1.15;font-weight:900;letter-spacing:13px;text-indent:13px;color:#eaffdc;background:linear-gradient(180deg,#f6ffee 12%,var(--lime) 55%,#4f9030 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;filter:drop-shadow(0 3px 0 rgba(18,46,14,.95)) drop-shadow(0 12px 30px rgba(143,227,90,.4))}
+#startScreen .ts-tagline{margin:10px 0 0;font-size:14px;letter-spacing:9px;text-indent:9px;color:#b9d8ac;font-weight:600;text-shadow:0 1px 4px rgba(0,0,0,.6)}
+#startScreen .ts-menu{display:flex;flex-direction:column;gap:13px;width:min(76vw,300px);margin-bottom:24px}
+#startScreen .ts-btn-main{width:100%;padding:15px 20px;font-size:19px;font-weight:800;letter-spacing:7px;text-indent:7px;border-radius:14px;background:linear-gradient(180deg,var(--amber-l),var(--amber) 55%,var(--amber-deep));box-shadow:0 5px 0 var(--amber-shadow),inset 0 2px 0 rgba(255,255,255,.55),0 12px 30px rgba(0,0,0,.55);animation:tsPulse 2.6s ease-in-out infinite}
+@keyframes tsPulse{0%,100%{filter:brightness(1)}50%{filter:brightness(1.1)}}
+#startScreen .ts-btn-main:hover{filter:brightness(1.06)}
+#startScreen .ts-btn-main:active{transform:translateY(3px);box-shadow:0 2px 0 var(--amber-shadow),inset 0 2px 0 rgba(255,255,255,.4)}
+#startScreen .ts-btn-sub{width:100%;padding:11px 20px;font-size:15px;letter-spacing:3px;border-radius:12px;background:linear-gradient(180deg,rgba(44,58,44,.94),rgba(24,33,24,.94));color:var(--txt-1);border:1px solid rgba(143,227,90,.3);box-shadow:0 3px 0 rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.12)}
+#startScreen .ts-btn-sub:hover{border-color:var(--lime);color:var(--lime)}
+#startScreen .ts-btn-sub:active{transform:translateY(2px)}
+#startScreen .ts-stats{display:flex;align-items:center;gap:12px;font-size:13px;color:#9fb896;flex-wrap:wrap;justify-content:center;width:100%;text-align:center}
+#startScreen .ts-stats b{color:#ffd60a;font-size:15px;text-shadow:0 0 8px rgba(255,214,10,.35)}
+#startScreen .ts-stats i{width:1px;height:12px;background:rgba(255,255,255,.2)}
+#startScreen .ts-cur{display:inline-block;width:auto}
+#startScreen .ts-cur .cur-lvl{padding:3px 12px;font-size:12px;margin:0;box-shadow:none;white-space:nowrap}
+#startScreen .ts-cur .cur-lvl b{font-size:15px}
+#startScreen .ts-help{margin:16px 0 0;font-size:11px;color:#7a9272;letter-spacing:.5px;text-align:center;padding:0 18px}
+#startScreen .ts-footer{margin:8px 0 0;font-size:11px;color:#5c6f55;text-align:center;padding:0 18px}
+@media (pointer:coarse){#startScreen .ts-title{font-size:40px;letter-spacing:9px;text-indent:9px}#startScreen .ts-menu{width:min(82vw,320px)}#startScreen .ts-stats{gap:8px;font-size:12px}#startScreen .ts-cur{display:block;width:100%;text-align:center;margin-top:2px}}
+@media (prefers-reduced-motion:reduce){#startScreen .ts-inner,#startScreen .ts-beetle,#startScreen .ts-btn-main{animation:none}}
+/* 主界面打开时隐藏页面 chrome（旧标题/HUD/提示），返回游戏后自动恢复 */
+body:has(#startScreen:not(.hidden))>h1,body:has(#startScreen:not(.hidden))>.sub,body:has(#startScreen:not(.hidden))>#panel,body:has(#startScreen:not(.hidden))>#tip,body:has(#startScreen:not(.hidden)) #tutorialHint,body:has(#startScreen:not(.hidden)) #levelInfo{visibility:hidden}
 </style>
 </head>
 <body>
@@ -254,18 +283,41 @@ body{
 <div id="levelResult" class="overlay hidden"><div class="card"><h2 id="resultTitle">关卡完成！</h2><p id="resultText"></p><button id="nextLevelBtn">进入下一关</button></div></div>
 <div id="pauseScreen" class="overlay hidden"><div class="card"><h2>已暂停</h2><p>深呼吸，准备好再继续。</p><button id="resumeBtn">继续</button><button id="quitBtn" class="icon-btn">返回菜单</button></div></div>
 <div id="gameOverScreen" class="overlay hidden"><div class="card"><h2 id="overTitle">挑战失败</h2><p id="overText"></p><button id="replayBtn">再玩一次</button><button id="menuBtn" class="icon-btn">返回菜单</button></div></div>
-<div id="startScreen" class="overlay">
-  <h2>昆虫防线</h2>
-  <p><b>夺回被昆虫侵占的区域，收集专属画面！</b></p>
-  <p>最高分：<span id="hiScore" class="score-stat">0</span>　已收集：<span id="unlockCount" class="stat">0</span> 张</p>
-  <p>无限关卡自由挑战</p>
-  <div id="levelGrid"></div>
-  <div class="menu-row">
-    <button id="startBtn">开始挑战</button>
-    <button id="galleryBtn" class="icon-btn">📷 相册</button>
-    <button id="settingsBtn" class="icon-btn">⚙ 设置</button>
+<div id="startScreen" class="overlay title-screen">
+  <div class="ts-inner">
+    <div class="ts-logo">
+      <svg class="ts-beetle" viewBox="0 0 48 48" aria-hidden="true">
+        <defs><radialGradient id="tsShell" cx="0.4" cy="0.3" r="0.95"><stop offset="0" stop-color="#8af0ff"/><stop offset=".45" stop-color="#22d3ee"/><stop offset="1" stop-color="#0086b3"/></radialGradient></defs>
+        <g stroke="#0c2630" stroke-width="2" stroke-linecap="round" fill="none">
+          <path d="M14 18 L7 13 L3 8"/><path d="M13 25 L5 25 L2 22"/><path d="M14 31 L7 36 L5 42"/>
+          <path d="M34 18 L41 13 L45 8"/><path d="M35 25 L43 25 L46 22"/><path d="M34 31 L41 36 L43 42"/>
+        </g>
+        <ellipse cx="24" cy="26" rx="13" ry="16" fill="url(#tsShell)"/>
+        <path d="M24 12 L24 41" stroke="rgba(255,255,255,.55)" stroke-width="1.6"/>
+        <path d="M14 22 Q24 26 34 22" stroke="rgba(8,60,75,.5)" fill="none"/>
+        <path d="M15 32 Q24 36 33 32" stroke="rgba(8,60,75,.5)" fill="none"/>
+        <ellipse cx="18" cy="17" rx="4" ry="5.5" fill="rgba(255,255,255,.55)"/>
+        <ellipse cx="24" cy="9" rx="7" ry="5.5" fill="#0086b3"/>
+        <circle cx="21" cy="8.5" r="2.6" fill="#fff"/><circle cx="27" cy="8.5" r="2.6" fill="#fff"/>
+        <circle cx="21.5" cy="8.8" r="1.3" fill="#0a0a0a"/><circle cx="27.5" cy="8.8" r="1.3" fill="#0a0a0a"/>
+        <path d="M21 5 L18 1 M27 5 L30 1" stroke="#0086b3" stroke-width="1.6" stroke-linecap="round"/>
+      </svg>
+      <h2 class="ts-title">昆虫防线</h2>
+      <p class="ts-tagline">森 林 守 卫 战</p>
+    </div>
+    <div class="ts-menu">
+      <button id="startBtn" class="ts-btn-main">开始游戏</button>
+      <button id="galleryBtn" class="ts-btn-sub">📷 画面相册</button>
+      <button id="settingsBtn" class="ts-btn-sub">⚙ 设 置</button>
+    </div>
+    <div class="ts-stats">
+      <span>最高分 <b id="hiScore" class="score-stat">0</b></span><i></i>
+      <span>已收集 <b id="unlockCount" class="stat">0</b> 张</span>
+      <span id="levelGrid" class="ts-cur"></span>
+    </div>
+    <p class="ts-help">沿绿色边沿移动 · 按住 J / 划线键进入黑区 · 回到边沿封闭区域夺回地盘</p>
+    <p class="ts-footer">华为手机建议关闭「双指长按识屏」，避免游戏中误触发</p>
   </div>
-  <p style="font-size:12px;color:#9aa">① 沿绿色边沿移动　② 按住 J / 划线进入黑区　③ 回到边沿封闭区域夺回地盘</p>
 </div>
 </div>
 <div id="mobileControls" class="hidden">
